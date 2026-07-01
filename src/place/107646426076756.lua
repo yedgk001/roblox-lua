@@ -65,6 +65,7 @@ autoRollSection:AddDropdown("seedList", {
     Title = "Seeds",
     Multi = true,
     Values = {
+        "Void Fruit",
         "Voidglass Heliconia",
         "Eclipse Bellflower",
         "Aethercoil",
@@ -85,7 +86,7 @@ autoRollRemote.OnClientEvent:Connect(function(dataTable)
     for index, slot in ipairs(dataTable.Slots) do
         local seedName = slot.Seed
         if table.find(selectedSeeds, seedName) then
-            buySeedRemote:FireServer(index, true)
+            buySeedRemote:FireServer(index)
             task.wait(1)
         end
     end
