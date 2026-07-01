@@ -2,8 +2,11 @@ local fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local autoSellRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("SellCrates")
 local autoRollRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RollSeeds")
 local buySeedRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("BuySeed")
+local player = game:GetService("Players").LocalPlayer
+local virtualUser = game:GetService("VirtualUser")
 local selectedSeeds = {}
 local autoRollOption = false
+local antiAfkOption = false
 local autoSellOption = false
 
 local window = fluent:CreateWindow({
@@ -23,6 +26,10 @@ local mainSection = window:AddTab({
 local autoRollSection = window:AddTab({
     Title = "Auto roll",
     Icon = "dice-6"
+})
+local miscSection = window:AddTab({
+    Title = "Misc",
+    Icon = "cog"
 })
 
 mainSection:AddToggle("autoSell", {
@@ -73,7 +80,7 @@ autoRollSection:AddDropdown("seedList", {
 end)
 
 autoRollRemote.OnClientEvent:Connect(function(dataTable)
-    if not autoSellOption then return end
+    if not autoRollOption then return end
     for index, slot in ipairs(dataTable.Slots) do
         local seedName = slot.Seed
         if table.find(selectedSeeds, seedName) then
@@ -105,6 +112,41 @@ autoRollSection:AddToggle("autoRoll", {
     else
         fluent:Notify({
             Title = "Auto roll",
+            Content = "Disabled.",
+            Duration = 2
+        })
+    end
+end)
+
+miscSection:AddToggle("antiAfk", {
+    Title = "Anti afk",
+    Description = "Prevents AFK kicks.",
+    Default = false
+}):OnChanged(function(value)
+    antiAfkOption = value
+
+    if antiAfkOption then
+        task.spawn(function ()
+            while antiAfkOption do
+                virtualUser:CaptureController()
+                virtualUser:ClickButton2(Vector2.new())
+                
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0.01, 0)
+                    task.wait(0.5)
+                    player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, -0.01, 0)
+                end
+                task.wait(60)
+            end
+        end)
+        fluent:Notify({
+            Title = "Anti afk",
+            Content = "Enabled.",
+            Duration = 2
+        })
+    else
+        fluent:Notify({
+            Title = "Anti afk",
             Content = "Disabled.",
             Duration = 2
         })
