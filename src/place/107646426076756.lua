@@ -13,7 +13,7 @@ local window = fluent:CreateWindow({
     Title = "Build a ring farm",
     SubTitle = "~ yedgk",
     TabWidth = 160,
-    Size = UDim2.fromOffset(500, 350),
+    Size = UDim2.fromOffset(500, 500),
     Acrylic = true,
     Theme = "Rose",
     MinimizeKey = Enum.KeyCode.RightControl
@@ -65,6 +65,7 @@ autoRollSection:AddDropdown("seedList", {
     Title = "Seeds",
     Multi = true,
     Values = {
+        "Voidglass Heliconia",
         "Eclipse Bellflower",
         "Aethercoil",
         "Seraphim Spire",
@@ -120,7 +121,7 @@ end)
 
 miscSection:AddToggle("antiAfk", {
     Title = "Anti afk",
-    Description = "Prevents AFK kicks.",
+    Description = "Prevents afk kicks.",
     Default = false
 }):OnChanged(function(value)
     antiAfkOption = value
