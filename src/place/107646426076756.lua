@@ -65,8 +65,6 @@ autoRollSection:AddDropdown("seedList", {
     Title = "Seeds",
     Multi = true,
     Values = {
-        "Void Fruit",
-        "Voidglass Heliconia",
         "Eclipse Bellflower",
         "Aethercoil",
         "Seraphim Spire",
@@ -85,7 +83,7 @@ autoRollRemote.OnClientEvent:Connect(function(dataTable)
     if not autoRollOption then return end
     for index, slot in ipairs(dataTable.Slots) do
         local seedName = slot.Seed
-        if table.find(selectedSeeds, seedName) then
+        if selectedSeeds[seedName] then
             buySeedRemote:FireServer(index)
             task.wait(1)
         end
@@ -132,7 +130,6 @@ miscSection:AddToggle("antiAfk", {
             while antiAfkOption do
                 virtualUser:CaptureController()
                 virtualUser:ClickButton2(Vector2.new())
-                
                 if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
                     player.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0.01, 0)
                     task.wait(0.5)
