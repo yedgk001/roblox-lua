@@ -1,8 +1,12 @@
 local placeId = game.PlaceId
 local url = "https://raw.githubusercontent.com/yedgk001/roblox-lua/refs/heads/main/src/place/" .. placeId .. ".lua"
 
-if not game.Loaded then game.Loaded:Wait() end
+task.defer(function()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
 
-local success, err = pcall(function()
-    loadstring(game:HttpGet(url))()
+    if not success then
+        warn("Failed to load script for placeId " .. placeId .. ": " .. err)
+    end
 end)
